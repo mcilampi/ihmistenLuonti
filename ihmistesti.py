@@ -1,7 +1,6 @@
-from os import close, replace, write
 import secrets
 import codecs
-import sys
+
 # luetaan miesten ja naisten nimet listoista ja palautetaan yksi
 # kaksi eri listaa, jotta säilyy mahdollisuus muuttaa ohjelmaa
 # arpomaan vain toista
@@ -52,8 +51,8 @@ def syntymaPaiva():
     return paiva
 
 # yhdistetään syntymävuosi, -kuukausi ja -päivä ja palautetaan stringinä
-def syntymaAika():
-    syntymaAika = f'{syntymaPaiva():02d}-{syntymaKuukausi():02d}-{syntymaVuosi()}'
+def syntymaAika(paiva,kuukausi,vuosi):
+    syntymaAika = f'{paiva:02d}-{kuukausi:02d}-{vuosi}'
     return syntymaAika
 
 # yhtdistetään hetun alkuosaksi päivä, kuukausi ja vuosi, palautetaan stringinä
@@ -95,12 +94,52 @@ def laskeTarkiste(alkuOsa,loppuOsa):
     tarkisteenAvain = int(yhteisLuku) % 31
     return tarkisteenAvain
 
-def kirjoitaTxt():
-    pass
+# luetaan tiedostosta postinumero- ja -toimipaikkalista
+def postiNroTmp():
+    postiNroLista = []
+    with open("postinrotsuodatettu.csv", "r") as pn:
+        for line in pn:
+            postiNroLista.append(line.replace(","," ").replace("\n",""))
+        pn.close()
+    return postiNroLista
 
-def kirjoitaCSV():
-    pass
+# arvotaan postinumerolistasta numero ja toimipaikka, palautetaan 
+def arvoPostiNro(postiNroLista):
+    henkilonPostiNro = postiNroLista[secrets.randbelow(len(postiNroLista))]
+    return henkilonPostiNro
 
+# luetaan tiennimiä tiedostosta ja palautetaan listana
+def lueTienNimet():
+    tieLista = []
+    with open("tiet.txt", "r") as tiet:
+        for line in tiet:
+            tieLista.append(line.replace("\n", ""))
+        tiet.close()
+    return tieLista
+
+#arvotaan tielistasta tie, kadunnumero ja tietyllä todennäköisyydellä rappu ja asunnonnumero
+def arvoOsoite(tieLista):
+    rappuKirjaimet = ["A", "B", "C", "D", "E", "F", "G", "H"]
+    tie = tieLista[secrets.randbelow(len(tieLista))]
+    rappu =""
+    asunnonNro = ""
+    katuNumero = f'{secrets.randbelow(30) + 1} '
+    rappuKo = secrets.randbelow(3)
+    if rappuKo > 0:
+        rappu = f'{rappuKirjaimet[secrets.randbelow(len(rappuKirjaimet))]} '
+        asunnonNumeroKo = secrets.randbelow(2)
+        if asunnonNumeroKo > 0:
+            asunnonNro = f'{secrets.randbelow(20) + 1} '
+    katuOsoite = f'{tie} {katuNumero}{rappu}{asunnonNro}'
+    return katuOsoite
+
+# arvotaan listasta suuntanumero ja loppuosa tietyltä väliltä
+def puhelinNumero():
+    suuntaNroLista = ["040", "050", "045", "041", "044"]
+    suuntaNro = suuntaNroLista[secrets.randbelow(len(suuntaNroLista))]
+    loppuOsa = secrets.choice(range(1100000,9500000))
+    puhelinNumero = f'{suuntaNro}{loppuOsa}'
+    return puhelinNumero
 
 ###################
 ## ohjelma alkaa ##
@@ -149,12 +188,18 @@ while kaynnissa:
     x = 0
     ihmisLista = []
     while x < montako:
-        alkuOsa = hetuAlku(syntymaPaiva(),syntymaKuukausi(),syntymaVuosi())
+        sVuosi = syntymaVuosi()
+        sKuukausi = syntymaKuukausi()
+        sPaiva = syntymaPaiva()
+        alkuOsa = hetuAlku(sPaiva,sKuukausi,sVuosi)
+        sAika = syntymaAika(sPaiva,sKuukausi,sVuosi)
         arvottuEtuNimi = arvoEtuNimi(lueEtuNimet())
         etuNimi = maaritaArvottuEtunimi(lueEtuNimet(),arvottuEtuNimi).replace("\n", "")
         lopunKolmeEkaa = loppuOsanAlku(arvottuEtuNimi)
         tarkiste = str(laskeTarkiste(alkuOsa,lopunKolmeEkaa))
-        ihmisenTiedot = f'{etuNimi} {arvoSukuNimi()} {syntymaAika()} {alkuOsa}{valiMerkki(alkuOsa)}{lopunKolmeEkaa}{tarkisteDictionary.get(tarkiste)}'
+        katuOsoite = arvoOsoite(lueTienNimet())
+        postiNroToimipaikka = arvoPostiNro(postiNroTmp())
+        ihmisenTiedot = f'{etuNimi} {arvoSukuNimi()} {sAika} {alkuOsa}{valiMerkki(alkuOsa)}{lopunKolmeEkaa}{tarkisteDictionary.get(tarkiste)} {katuOsoite}{postiNroToimipaikka} {puhelinNumero()}'
         print(f'{x + 1}. {ihmisenTiedot}')
         ihmisLista.append(ihmisenTiedot)
         x += 1
