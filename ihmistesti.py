@@ -1,5 +1,7 @@
+from os import close, replace, write
 import secrets
 import codecs
+import sys
 # luetaan miesten ja naisten nimet listoista ja palautetaan yksi
 # kaksi eri listaa, jotta säilyy mahdollisuus muuttaa ohjelmaa
 # arpomaan vain toista
@@ -93,6 +95,12 @@ def laskeTarkiste(alkuOsa,loppuOsa):
     tarkisteenAvain = int(yhteisLuku) % 31
     return tarkisteenAvain
 
+def kirjoitaTxt():
+    pass
+
+def kirjoitaCSV():
+    pass
+
 
 ###################
 ## ohjelma alkaa ##
@@ -131,21 +139,65 @@ tarkisteDictionary = {
     "30": "Y"
 }
 
-
 while True:
-    try: 
-        montako = int(input("Montako nimeä haluat tehdä? "))
-        break
-    except:
-        print("Anna numero!")
-x = 0
-while x < montako:
-    alkuOsa = hetuAlku(syntymaPaiva(),syntymaKuukausi(),syntymaVuosi())
-    arvottuEtuNimi = arvoEtuNimi(lueEtuNimet())
-    etuNimi = maaritaArvottuEtunimi(lueEtuNimet(),arvottuEtuNimi).replace("\n", "")
-    lopunKolmeEkaa = loppuOsanAlku(arvottuEtuNimi)
-    tarkiste = str(laskeTarkiste(alkuOsa,lopunKolmeEkaa))
-    print(f'{x + 1}. {etuNimi} {arvoSukuNimi()} {syntymaAika()} {alkuOsa}{valiMerkki(alkuOsa)}{lopunKolmeEkaa}{tarkisteDictionary.get(tarkiste)}')
-#    print(f'{arvoEtuNimi(lueEtuNimet())} {arvoSukuNimi()} {syntymaAika()} {alkuOsa} {valiMerkki(alkuOsa)}')
-    x += 1
-    
+    while True:
+        try: 
+            montako = int(input("Montako nimeä haluat tehdä? "))
+            break
+        except:
+            print("Anna numero!")
+    x = 0
+    ihmisLista = []
+    while x < montako:
+        alkuOsa = hetuAlku(syntymaPaiva(),syntymaKuukausi(),syntymaVuosi())
+        arvottuEtuNimi = arvoEtuNimi(lueEtuNimet())
+        etuNimi = maaritaArvottuEtunimi(lueEtuNimet(),arvottuEtuNimi).replace("\n", "")
+        lopunKolmeEkaa = loppuOsanAlku(arvottuEtuNimi)
+        tarkiste = str(laskeTarkiste(alkuOsa,lopunKolmeEkaa))
+        ihmisenTiedot = f'{etuNimi} {arvoSukuNimi()} {syntymaAika()} {alkuOsa}{valiMerkki(alkuOsa)}{lopunKolmeEkaa}{tarkisteDictionary.get(tarkiste)}'
+        print(f'{x + 1}. {ihmisenTiedot}')
+        ihmisLista.append(ihmisenTiedot)
+        x += 1
+    while True:
+        try:
+            tiedostoonko = input("Haluatko tallentaa nimet tiedostoon? k/e")
+            if tiedostoonko != "k" and tiedostoonko != "e":
+                raise Exception()
+            break
+        except:
+            print("Valitse k tai e!")
+    if tiedostoonko == "k":
+        tiedostoNimi = input("Anna tiedostonimi: ")
+        while True:
+            try:
+                print("Haluatko tallentaa tiedoston")
+                print("1. Tekstitiedostona (.txt)")
+                print("2. CSV-tiedostona (.csv)")
+                tiedostoMuoto = int(input("Valintasi: "))
+                break
+            except:
+                print("Valitse 1 tai 2!")
+
+        if tiedostoMuoto == 1:
+            with codecs.open(f'{tiedostoNimi}.txt', "w", "utf-8") as txt:
+                for i in ihmisLista:
+                    txt.write(f'{i}\n')
+                txt.close()
+        elif tiedostoMuoto == 2:
+            with codecs.open(f'{tiedostoNimi}.csv', "w", "utf-8") as csv:
+                for i in ihmisLista:
+                    csv.write(f'{i.replace(" ", ",")}\n')
+                csv.close()
+    while True:
+        try:
+            vielako = input("Haluatko tehdä lisää nimiä? k/e ")
+            if vielako != "k" and vielako != "e":
+                raise Exception()
+            break
+        except:
+            print("Valitse kyllä tai ei!")
+        if vielako == "e":
+            print("Heippa!")
+            sys.exit(0)
+        elif vielako == "k":
+            pass
