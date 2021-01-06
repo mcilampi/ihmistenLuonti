@@ -138,8 +138,8 @@ tarkisteDictionary = {
     "29": "X",
     "30": "Y"
 }
-
-while True:
+kaynnissa = True
+while kaynnissa:
     while True:
         try: 
             montako = int(input("Montako nimeä haluat tehdä? "))
@@ -196,8 +196,6 @@ while True:
             break
         except:
             print("Valitse kyllä tai ei!")
-        if vielako == "e":
-            print("Heippa!")
-            sys.exit(0)
-        elif vielako == "k":
-            pass
+  
+    if vielako == "e":
+        kaynnissa = False
