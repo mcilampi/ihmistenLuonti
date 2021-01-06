@@ -1,5 +1,5 @@
 import secrets
-
+import codecs
 # luetaan miesten ja naisten nimet listoista ja palautetaan yksi
 # kaksi eri listaa, jotta säilyy mahdollisuus muuttaa ohjelmaa
 # arpomaan vain toista
@@ -8,10 +8,10 @@ import secrets
 
 def lueEtuNimet():
     etuNimet = []
-    with open ("etunimilista_miehet.txt", "r") as etu:
+    with open("etunimilista_miehet.txt", "r", encoding="utf-8") as etu:
         for line in etu:
             etuNimet.append(line)
-    with open ("etunimilista_naiset.txt", "r") as etu:
+    with open ("etunimilista_naiset.txt", "r", encoding="utf-8") as etu:
         for line in etu:
             etuNimet.append(line)
     return etuNimet
@@ -30,7 +30,7 @@ def maaritaArvottuEtunimi(etuNimiLista,etuNimenNumero):
 # lueataan listasta sukunimiä, arvotaan yksi ja palautetaan
 def arvoSukuNimi():
     sukuNimet = []
-    with open ("sukunimilista.txt", "r") as suku:
+    with open ("sukunimilista.txt", "r", encoding="utf-8") as suku:
         for line in suku:
             sukuNimet.append(line)
     sukuNimi = sukuNimet[secrets.choice(range(0, len(sukuNimet)))].replace("\n", "")
@@ -56,6 +56,7 @@ def syntymaAika():
 
 # yhtdistetään hetun alkuosaksi päivä, kuukausi ja vuosi, palautetaan stringinä
 def hetuAlku(paiva,kuukausi,vuosi):
+    uusiVuosi = 0
     if vuosi >= 2000:
         uusiVuosi = vuosi-2000
     elif vuosi < 2000: 
@@ -65,6 +66,7 @@ def hetuAlku(paiva,kuukausi,vuosi):
 
 # määritetään välimerkki hetun alkuosan kahden viimeisen luvun perusteella
 def valiMerkki(hetuAlku):
+    valiMerkki = ""
     if int(hetuAlku[4:6]) < 40:
         valiMerkki = "A"
     elif int(hetuAlku[4:6]) >= 40:
@@ -89,8 +91,6 @@ def loppuOsanAlku(etuNimenIndex):
 def laskeTarkiste(alkuOsa,loppuOsa):
     yhteisLuku = str(alkuOsa)+str(loppuOsa)
     tarkisteenAvain = int(yhteisLuku) % 31
-    avainString = '"' + str(tarkisteenAvain) + '"'
-    tarkiste = tarkisteDictionary.get(avainString)
     return tarkisteenAvain
 
 
@@ -148,4 +148,4 @@ while x < montako:
     print(f'{x + 1}. {etuNimi} {arvoSukuNimi()} {syntymaAika()} {alkuOsa}{valiMerkki(alkuOsa)}{lopunKolmeEkaa}{tarkisteDictionary.get(tarkiste)}')
 #    print(f'{arvoEtuNimi(lueEtuNimet())} {arvoSukuNimi()} {syntymaAika()} {alkuOsa} {valiMerkki(alkuOsa)}')
     x += 1
-
+    
