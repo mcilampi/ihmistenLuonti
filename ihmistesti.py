@@ -5,22 +5,9 @@ import codecs
 # kaksi eri listaa, jotta säilyy mahdollisuus muuttaa ohjelmaa
 # arpomaan vain toista
 
-
-
-def lueEtuNimet():
-    etuNimet = []
-    with open("etunimilista_miehet.txt", "r", encoding="utf-8") as etu:
-        for line in etu:
-            etuNimet.append(line)
-    with open ("etunimilista_naiset.txt", "r", encoding="utf-8") as etu:
-        for line in etu:
-            etuNimet.append(line)
-    return etuNimet
-
 # arvotaan etunimilistasta etunimen index-numero
 def arvoEtuNimi(etuNimiLista):
     etuNimenNumero = secrets.choice(range(0, len(etuNimiLista)))
-    #etuNimi = etuNimiLista[secrets.choice(range(0, len(etuNimiLista)))].replace("\n", "")
     return etuNimenNumero
 
 # valitaan etunimilistasta arvoEtuNimi-function palauttaman indexin nimi
@@ -28,12 +15,7 @@ def maaritaArvottuEtunimi(etuNimiLista,etuNimenNumero):
     etuNimi = etuNimiLista[etuNimenNumero]
     return etuNimi
 
-# lueataan listasta sukunimiä, arvotaan yksi ja palautetaan
-def arvoSukuNimi():
-    sukuNimet = []
-    with open ("sukunimilista.txt", "r", encoding="utf-8") as suku:
-        for line in suku:
-            sukuNimet.append(line)
+def arvoSukuNimi(sukuNimet):
     sukuNimi = sukuNimet[secrets.choice(range(0, len(sukuNimet)))].replace("\n", "")
     return sukuNimi
 
@@ -94,28 +76,10 @@ def laskeTarkiste(alkuOsa,loppuOsa):
     tarkisteenAvain = int(yhteisLuku) % 31
     return tarkisteenAvain
 
-# luetaan tiedostosta postinumero- ja -toimipaikkalista
-def postiNroTmp():
-    postiNroLista = []
-    with open("postinrotsuodatettu.csv", "r") as pn:
-        for line in pn:
-            postiNroLista.append(line.replace(","," ").replace("\n",""))
-        pn.close()
-    return postiNroLista
-
 # arvotaan postinumerolistasta numero ja toimipaikka, palautetaan 
 def arvoPostiNro(postiNroLista):
     henkilonPostiNro = postiNroLista[secrets.randbelow(len(postiNroLista))]
     return henkilonPostiNro
-
-# luetaan tiennimiä tiedostosta ja palautetaan listana
-def lueTienNimet():
-    tieLista = []
-    with open("tiet.txt", "r") as tiet:
-        for line in tiet:
-            tieLista.append(line.replace("\n", ""))
-        tiet.close()
-    return tieLista
 
 #arvotaan tielistasta tie, kadunnumero ja tietyllä todennäköisyydellä rappu ja asunnonnumero
 def arvoOsoite(tieLista):
@@ -177,7 +141,35 @@ tarkisteDictionary = {
     "29": "X",
     "30": "Y"
 }
+# luetaan miesten ja naisten etunimet tiedostoista ja tehdään yksi lista
+etuNimet = []
+with open("etunimilista_miehet.txt", "r", encoding="utf-8") as etu:
+    for line in etu:
+        etuNimet.append(line)
+with open ("etunimilista_naiset.txt", "r", encoding="utf-8") as etu:
+    for line in etu:
+        etuNimet.append(line)
+
+# luetaan sukunimet tiedostosta listaan
+sukuNimet = []
+with open ("sukunimilista.txt", "r", encoding="utf-8") as suku:
+    for line in suku:
+        sukuNimet.append(line)
+
+postiNroLista = []
+with open("postinrotsuodatettu.csv", "r") as pn:
+    for line in pn:
+        postiNroLista.append(line.replace(","," ").replace("\n",""))
+    pn.close()
+
+tieLista = []
+with open("tiet.txt", "r") as tiet:
+    for line in tiet:
+        tieLista.append(line.replace("\n", ""))
+    tiet.close()
+
 kaynnissa = True
+
 while kaynnissa:
     while True:
         try: 
@@ -193,19 +185,19 @@ while kaynnissa:
         sPaiva = syntymaPaiva()
         alkuOsa = hetuAlku(sPaiva,sKuukausi,sVuosi)
         sAika = syntymaAika(sPaiva,sKuukausi,sVuosi)
-        arvottuEtuNimi = arvoEtuNimi(lueEtuNimet())
-        etuNimi = maaritaArvottuEtunimi(lueEtuNimet(),arvottuEtuNimi).replace("\n", "")
+        arvottuEtuNimi = arvoEtuNimi(etuNimet)
+        etuNimi = maaritaArvottuEtunimi(etuNimet,arvottuEtuNimi).replace("\n", "")
         lopunKolmeEkaa = loppuOsanAlku(arvottuEtuNimi)
         tarkiste = str(laskeTarkiste(alkuOsa,lopunKolmeEkaa))
-        katuOsoite = arvoOsoite(lueTienNimet())
-        postiNroToimipaikka = arvoPostiNro(postiNroTmp())
-        ihmisenTiedot = f'{etuNimi} {arvoSukuNimi()} {sAika} {alkuOsa}{valiMerkki(alkuOsa)}{lopunKolmeEkaa}{tarkisteDictionary.get(tarkiste)} {katuOsoite}{postiNroToimipaikka} {puhelinNumero()}'
+        katuOsoite = arvoOsoite(tieLista)
+        postiNroToimipaikka = arvoPostiNro(postiNroLista)
+        ihmisenTiedot = f'{etuNimi} {arvoSukuNimi(sukuNimet)} {sAika} {alkuOsa}{valiMerkki(alkuOsa)}{lopunKolmeEkaa}{tarkisteDictionary.get(tarkiste)} {katuOsoite}{postiNroToimipaikka} {puhelinNumero()}'
         print(f'{x + 1}. {ihmisenTiedot}')
         ihmisLista.append(ihmisenTiedot)
         x += 1
     while True:
         try:
-            tiedostoonko = input("Haluatko tallentaa nimet tiedostoon? k/e")
+            tiedostoonko = input("Haluatko tallentaa nimet tiedostoon? k/e ")
             if tiedostoonko != "k" and tiedostoonko != "e":
                 raise Exception()
             break
