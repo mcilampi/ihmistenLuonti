@@ -179,6 +179,7 @@ while kaynnissa:
             print("Anna numero!")
     x = 0
     ihmisLista = []
+    ihmisListaCSV = []
     while x < montako:
         sVuosi = syntymaVuosi()
         sKuukausi = syntymaKuukausi()
@@ -192,8 +193,10 @@ while kaynnissa:
         katuOsoite = arvoOsoite(tieLista)
         postiNroToimipaikka = arvoPostiNro(postiNroLista)
         ihmisenTiedot = f'{etuNimi} {arvoSukuNimi(sukuNimet)} {sAika} {alkuOsa}{valiMerkki(alkuOsa)}{lopunKolmeEkaa}{tarkisteDictionary.get(tarkiste)} {katuOsoite}{postiNroToimipaikka} {puhelinNumero()}'
-        print(f'{x + 1}. {ihmisenTiedot}')
+        ihmisenTiedotCSV = f'{etuNimi},{arvoSukuNimi(sukuNimet)},{sAika},{alkuOsa}{valiMerkki(alkuOsa)}{lopunKolmeEkaa}{tarkisteDictionary.get(tarkiste)},{katuOsoite}{postiNroToimipaikka},{puhelinNumero()}'
+        print(f'{x + 1:07d}. {ihmisenTiedot}')
         ihmisLista.append(ihmisenTiedot)
+        ihmisListaCSV.append(ihmisenTiedotCSV)
         x += 1
     while True:
         try:
@@ -222,8 +225,8 @@ while kaynnissa:
                 txt.close()
         elif tiedostoMuoto == 2:
             with codecs.open(f'{tiedostoNimi}.csv', "w", "utf-8") as csv:
-                for i in ihmisLista:
-                    csv.write(f'{i.replace(" ", ",")}\n')
+                for i in ihmisListaCSV:
+                    csv.write(f'{i}\n')
                 csv.close()
     while True:
         try:
