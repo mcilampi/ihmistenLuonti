@@ -146,24 +146,28 @@ etuNimet = []
 with open("etunimilista_miehet.txt", "r", encoding="utf-8") as etu:
     for line in etu:
         etuNimet.append(line)
+    etu.close()
+
 with open ("etunimilista_naiset.txt", "r", encoding="utf-8") as etu:
     for line in etu:
         etuNimet.append(line)
+    etu.close()
 
 # luetaan sukunimet tiedostosta listaan
 sukuNimet = []
 with open ("sukunimilista.txt", "r", encoding="utf-8") as suku:
     for line in suku:
         sukuNimet.append(line)
+    suku.close()
 
 postiNroLista = []
-with open("postinrotsuodatettu.csv", "r") as pn:
+with open("postinrotsuodatettu.csv", "r", encoding="utf-8") as pn:
     for line in pn:
         postiNroLista.append(line.replace(","," ").replace("\n",""))
     pn.close()
 
 tieLista = []
-with open("tiet.txt", "r") as tiet:
+with open("tiet.txt", "r", encoding="utf-8") as tiet:
     for line in tiet:
         tieLista.append(line.replace("\n", ""))
     tiet.close()
@@ -219,12 +223,12 @@ while kaynnissa:
                 print("Valitse 1 tai 2!")
 
         if tiedostoMuoto == 1:
-            with codecs.open(f'{tiedostoNimi}.txt', "w", "utf-8") as txt:
+            with codecs.open(f'{tiedostoNimi}.txt', "w", encoding="utf-8") as txt:
                 for i in ihmisLista:
                     txt.write(f'{i}\n')
                 txt.close()
         elif tiedostoMuoto == 2:
-            with codecs.open(f'{tiedostoNimi}.csv', "w", "utf-8") as csv:
+            with codecs.open(f'{tiedostoNimi}.csv', "w", encoding="utf-8") as csv:
                 for i in ihmisListaCSV:
                     csv.write(f'{i}\n')
                 csv.close()

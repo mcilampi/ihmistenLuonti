@@ -1,5 +1,5 @@
 # ihmistenLuonti
-Python excercise that creates random finnish people. Create dummy persons, their (obv. fake) contact information and formally correct social security numbers. It takes about half an hour to create the finnish population (roughly 5.5 million).
+Python excercise that creates random finnish people. Create dummy persons, their (obv fake) contact information and formally correct social security numbers. It takes about half an hour to create the finnish population (roughly 5.5 million).
 
 
 ### Usage
