@@ -193,7 +193,7 @@ while kaynnissa:
         katuOsoite = arvoOsoite(tieLista)
         postiNroToimipaikka = arvoPostiNro(postiNroLista)
         ihmisenTiedot = f'{etuNimi} {arvoSukuNimi(sukuNimet)} {sAika} {alkuOsa}{valiMerkki(alkuOsa)}{lopunKolmeEkaa}{tarkisteDictionary.get(tarkiste)} {katuOsoite}{postiNroToimipaikka} {puhelinNumero()}'
-        ihmisenTiedotCSV = f'{etuNimi},{arvoSukuNimi(sukuNimet)},{sAika},{alkuOsa}{valiMerkki(alkuOsa)}{lopunKolmeEkaa}{tarkisteDictionary.get(tarkiste)},{katuOsoite}{postiNroToimipaikka},{puhelinNumero()}'
+        ihmisenTiedotCSV = f'{etuNimi},{arvoSukuNimi(sukuNimet)},{sAika},{alkuOsa}{valiMerkki(alkuOsa)}{lopunKolmeEkaa}{tarkisteDictionary.get(tarkiste)},{katuOsoite},{postiNroToimipaikka},{puhelinNumero()}'
         print(f'{x + 1:07d}. {ihmisenTiedot}')
         ihmisLista.append(ihmisenTiedot)
         ihmisListaCSV.append(ihmisenTiedotCSV)
