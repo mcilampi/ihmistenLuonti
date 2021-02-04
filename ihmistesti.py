@@ -1,5 +1,6 @@
 import secrets
 import codecs
+import datetime
 
 # luetaan miesten ja naisten nimet listoista ja palautetaan yksi
 # kaksi eri listaa, jotta säilyy mahdollisuus muuttaa ohjelmaa
@@ -178,6 +179,7 @@ while kaynnissa:
     while True:
         try: 
             montako = int(input("Montako nimeä haluat tehdä? "))
+            alkuaika = datetime.datetime.now()
             break
         except:
             print("Anna numero!")
@@ -204,6 +206,9 @@ while kaynnissa:
         x += 1
     while True:
         try:
+            loppuAika = datetime.datetime.now()
+            kesto = loppuAika - alkuaika
+            print(f'Aikaa kului {kesto}')
             tiedostoonko = input("Haluatko tallentaa nimet tiedostoon? k/e ")
             if tiedostoonko != "k" and tiedostoonko != "e":
                 raise Exception()
